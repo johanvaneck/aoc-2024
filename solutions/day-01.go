@@ -39,8 +39,6 @@ func Day01Part01() {
 		sum += int(math.Abs(float64(firstColumn[i] - secondColumn[i])))
 	}
 
-	fmt.Println(firstColumn)
-
 	fmt.Printf("Day01PartA: %d\n", sum)
 }
 
