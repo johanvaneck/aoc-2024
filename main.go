@@ -9,7 +9,9 @@ import (
 func main() {
 	start := time.Now()
 
-	solutions.Day01Part02()
+	solution := solutions.Day02Part02()
+
+	fmt.Printf("Solution: %d\n", solution)
 
 	elapsed := time.Since(start)
 	fmt.Printf("Running time: %s\n", elapsed)

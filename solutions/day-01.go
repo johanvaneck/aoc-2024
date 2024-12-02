@@ -2,14 +2,13 @@ package solutions
 
 import (
 	"aoc-2024/utils"
-	"fmt"
 	"math"
 	"sort"
 	"strconv"
 	"strings"
 )
 
-func Day01Part01() {
+func Day01Part01() int {
 	text := utils.FileToString("inputs/day-01.txt")
 
 	lines := strings.Split(text, "\n")
@@ -39,10 +38,10 @@ func Day01Part01() {
 		sum += int(math.Abs(float64(firstColumn[i] - secondColumn[i])))
 	}
 
-	fmt.Printf("Day01PartA: %d\n", sum)
+	return sum
 }
 
-func Day01Part02() {
+func Day01Part02() int {
 	text := utils.FileToString("inputs/day-01.txt")
 
 	lines := strings.Split(text, "\n")
@@ -81,7 +80,7 @@ func Day01Part02() {
 		similaritySum += similaririty(key, count)
 	}
 
-	fmt.Printf("Day01PartB: %d\n", similaritySum)
+	return similaritySum
 }
 
 func similaririty(value int, count int) int {
