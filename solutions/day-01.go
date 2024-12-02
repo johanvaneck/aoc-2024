@@ -7,12 +7,9 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func Day01Part01() {
-	start := time.Now()
-
 	text := utils.FileToString("inputs/day-01.txt")
 
 	lines := strings.Split(text, "\n")
@@ -45,14 +42,9 @@ func Day01Part01() {
 	fmt.Println(firstColumn)
 
 	fmt.Printf("Day01PartA: %d\n", sum)
-
-	elapsed := time.Since(start)
-	fmt.Printf("Running time: %s\n", elapsed)
 }
 
 func Day01Part02() {
-	start := time.Now()
-
 	text := utils.FileToString("inputs/day-01.txt")
 
 	lines := strings.Split(text, "\n")
@@ -92,9 +84,6 @@ func Day01Part02() {
 	}
 
 	fmt.Printf("Day01PartB: %d\n", similaritySum)
-
-	elapsed := time.Since(start)
-	fmt.Printf("Running time: %s\n", elapsed)
 }
 
 func similaririty(value int, count int) int {
