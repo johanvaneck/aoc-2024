@@ -2,7 +2,6 @@ package solutions
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 )
 
@@ -19,7 +18,6 @@ func Day04Part01() int {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
 		matrix = append(matrix, line)
 	}
 
@@ -174,7 +172,6 @@ func Day04Part02() int {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
 		matrix = append(matrix, line)
 	}
 
