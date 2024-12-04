@@ -9,7 +9,7 @@ import (
 func main() {
 	start := time.Now()
 
-	solution := solutions.Day03Part02()
+	solution := solutions.Day04Part01()
 
 	fmt.Printf("Solution: %d\n", solution)
 
