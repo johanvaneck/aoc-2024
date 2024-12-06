@@ -40,7 +40,7 @@ func Day06Part01() int {
 			marker == "" {
 			break
 		}
-		i, j, marker = move(i, j, marker, matrix[:])
+		i, j, marker = move(i, j, marker, matrix[:], -1, -1)
 	}
 
 	count := 0
@@ -60,39 +60,43 @@ func Day06Part01() int {
 	return count
 }
 
-func move(i int, j int, marker string, matrix [][]rune) (int, int, string) {
+func move(i int, j int, marker string, matrix [][]rune, obsI int, ObsJ int) (int, int, string) {
 	if marker == "^" {
-		if i-1 < 0 {
-			return i - 1, j, marker
-		} else if matrix[i-1][j] == '#' {
+		nextI := i - 1
+		if nextI < 0 {
+			return nextI, j, marker
+		} else if matrix[nextI][j] == '#' || (nextI == obsI && j == ObsJ) {
 			return i, j + 1, ">"
 		} else {
-			return i - 1, j, "^"
+			return nextI, j, "^"
 		}
 
 	} else if marker == ">" {
-		if j+1 >= len(matrix[i]) {
-			return i, j + 1, marker
-		} else if matrix[i][j+1] == '#' {
+		nextJ := j + 1
+		if nextJ >= len(matrix[i]) {
+			return i, nextJ, marker
+		} else if matrix[i][nextJ] == '#' || (i == obsI && nextJ == ObsJ) {
 			return i + 1, j, "v"
 		} else {
 			return i, j + 1, ">"
 		}
 	} else if marker == "<" {
-		if j-1 < 0 {
-			return i, j - 1, marker
-		} else if matrix[i][j-1] == '#' {
+		nextJ := j - 1
+		if nextJ < 0 {
+			return i, nextJ, marker
+		} else if matrix[i][j-1] == '#' || (i == obsI && nextJ == ObsJ) {
 			return i - 1, j, "^"
 		} else {
-			return i, j - 1, "<"
+			return i, nextJ, "<"
 		}
 	} else if marker == "v" {
-		if i+1 >= len(matrix) {
-			return i + 1, j, marker
-		} else if matrix[i+1][j] == '#' {
+		nextI := i + 1
+		if nextI >= len(matrix) {
+			return nextI, j, marker
+		} else if matrix[nextI][j] == '#' || (nextI == obsI && j == ObsJ) {
 			return i, j - 1, "<"
 		} else {
-			return i + 1, j, "v"
+			return nextI, j, "v"
 		}
 	}
 
@@ -122,32 +126,24 @@ func Day06Part02() int {
 
 	scanner := bufio.NewScanner(file)
 
-	originalMatrix := make([][]rune, 0)
+	matrix := make([][]rune, 0)
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		originalMatrix = append(originalMatrix, []rune(line))
+		matrix = append(matrix, []rune(line))
 	}
 
-	h := len(originalMatrix)
-	w := len(originalMatrix[0])
-	startI, startJ, startMarker := findMarker(originalMatrix)
+	h := len(matrix)
+	w := len(matrix[0])
+	startI, startJ, startMarker := findMarker(matrix)
 
 	count := 0
-	for i := range originalMatrix {
-		for j := range originalMatrix[i] {
-			if (i == startI && j == startJ) || (originalMatrix[i][j] == '#') {
+	for i := range matrix {
+		for j := range matrix[i] {
+			if (i == startI && j == startJ) || (matrix[i][j] == '#') {
 				continue
 			}
-			// Copy matrix
-			matrix := make([][]rune, len(originalMatrix))
-			for i, line := range originalMatrix {
-				matrix[i] = make([]rune, len(line))
-				copy(matrix[i], line)
-			}
-			// Insert new obstacle
-			matrix[i][j] = '#'
-			if checkLoop(startI, startJ, string(startMarker), matrix, w, h) {
+			if checkLoop(startI, startJ, string(startMarker), matrix, w, h, i, j) {
 				count++
 			}
 		}
@@ -156,7 +152,7 @@ func Day06Part02() int {
 	return count
 }
 
-func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w int, h int) bool {
+func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w int, h int, obsI int, ObsJ int) bool {
 	i, j := startI, startJ
 	marker := startMarker
 	visited := make([][]string, h)
@@ -179,7 +175,7 @@ func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w in
 
 		visited[i][j] = marker
 
-		i, j, marker = move(i, j, marker, matrix[:])
+		i, j, marker = move(i, j, marker, matrix[:], obsI, ObsJ)
 	}
 
 	return false
