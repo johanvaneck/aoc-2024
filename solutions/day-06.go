@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sync"
-	"sync/atomic"
 )
 
 func Day06Part01() int {
