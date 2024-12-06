@@ -136,7 +136,7 @@ func Day06Part02() int {
 	count := 0
 	for i := range originalMatrix {
 		for j := range originalMatrix[i] {
-			if (i == startI && j == startJ) || (string(originalMatrix[i][j]) == "#") {
+			if (i == startI && j == startJ) || (originalMatrix[i][j] == '#') {
 				continue
 			}
 			// Copy matrix
