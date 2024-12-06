@@ -66,7 +66,7 @@ func move(i int, j int, marker string, matrix [][]rune, obsI int, ObsJ int) (int
 		if nextI < 0 {
 			return nextI, j, marker
 		} else if matrix[nextI][j] == '#' || (nextI == obsI && j == ObsJ) {
-			return i, j + 1, ">"
+			return i, j, ">"
 		} else {
 			return nextI, j, "^"
 		}
@@ -76,7 +76,7 @@ func move(i int, j int, marker string, matrix [][]rune, obsI int, ObsJ int) (int
 		if nextJ >= len(matrix[i]) {
 			return i, nextJ, marker
 		} else if matrix[i][nextJ] == '#' || (i == obsI && nextJ == ObsJ) {
-			return i + 1, j, "v"
+			return i, j, "v"
 		} else {
 			return i, j + 1, ">"
 		}
@@ -85,7 +85,7 @@ func move(i int, j int, marker string, matrix [][]rune, obsI int, ObsJ int) (int
 		if nextJ < 0 {
 			return i, nextJ, marker
 		} else if matrix[i][j-1] == '#' || (i == obsI && nextJ == ObsJ) {
-			return i - 1, j, "^"
+			return i, j, "^"
 		} else {
 			return i, nextJ, "<"
 		}
@@ -94,7 +94,7 @@ func move(i int, j int, marker string, matrix [][]rune, obsI int, ObsJ int) (int
 		if nextI >= len(matrix) {
 			return nextI, j, marker
 		} else if matrix[nextI][j] == '#' || (nextI == obsI && j == ObsJ) {
-			return i, j - 1, "<"
+			return i, j, "<"
 		} else {
 			return nextI, j, "v"
 		}
@@ -140,7 +140,7 @@ func Day06Part02() int {
 	count := 0
 	for i := range matrix {
 		for j := range matrix[i] {
-			if (i == startI && j == startJ) || (matrix[i][j] == '#') {
+			if (i == startI && j == startJ) || (string(matrix[i][j]) == "#") {
 				continue
 			}
 			if checkLoop(startI, startJ, string(startMarker), matrix, w, h, i, j) {
@@ -152,12 +152,15 @@ func Day06Part02() int {
 	return count
 }
 
-func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w int, h int, obsI int, ObsJ int) bool {
+func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w int, h int, obsI int, obsJ int) bool {
 	i, j := startI, startJ
 	marker := startMarker
-	visited := make([][]string, h)
+	visited := make([][][]string, h)
 	for i := range visited {
-		visited[i] = make([]string, w)
+		visited[i] = make([][]string, w)
+		for j := range visited[i] {
+			visited[i][j] = make([]string, 0)
+		}
 	}
 
 	for true {
@@ -169,17 +172,43 @@ func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w in
 			break
 		}
 
-		if visited[i][j] == marker {
-			return true
+		for k := range visited[i][j] {
+			if visited[i][j][k] == marker {
+				// fmt.Print("\033[H\033[2J") // Clear screen
+				// fmt.Println(matrixToString(matrix, visited, obsI, obsJ))
+				// fmt.Scanln()
+				// time.Sleep(time.Second / 10)
+				return true
+			}
 		}
 
-		visited[i][j] = marker
+		visited[i][j] = append(visited[i][j], marker)
 
-		i, j, marker = move(i, j, marker, matrix[:], obsI, ObsJ)
+		i, j, marker = move(i, j, marker, matrix[:], obsI, obsJ)
+
 	}
-
 	return false
+}
+
+func matrixToString(matrix [][]rune, visited [][][]string, obsI int, obsJ int) string {
+	result := ""
+	for i := range matrix {
+		for j := range matrix[i] {
+			if obsI == i && obsJ == j {
+				result += "\x1b[1;31mO\x1b[1;0m"
+			} else if len(visited[i][j]) > 0 {
+				result += "\x1b[1;33m" + string(visited[i][j][len(visited[i][j])-1][0]) + "\x1b[1;0m"
+			} else if matrix[i][j] == '#' {
+				result += "\x1b[1;32m" + string(matrix[i][j]) + "\x1b[1;0m"
+			} else {
+				result += string(matrix[i][j])
+			}
+		}
+		result += "\n"
+	}
+	return result
 }
 
 // Tried:
 // 1893 too low
+// 1972 correct
