@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
+	"sync/atomic"
 )
 
 func Day06Part01() int {
@@ -63,7 +65,7 @@ func Day06Part01() int {
 func move(i int, j int, marker string, matrix [][]rune) (int, int, string) {
 	if marker == "^" {
 		if i-1 < 0 {
-			return i-1, j, ""
+			return i - 1, j, marker
 		} else if matrix[i-1][j] == '#' {
 			return i, j + 1, ">"
 		} else {
@@ -72,7 +74,7 @@ func move(i int, j int, marker string, matrix [][]rune) (int, int, string) {
 
 	} else if marker == ">" {
 		if j+1 >= len(matrix[i]) {
-			return i, j + 1, ""
+			return i, j + 1, marker
 		} else if matrix[i][j+1] == '#' {
 			return i + 1, j, "v"
 		} else {
@@ -80,7 +82,7 @@ func move(i int, j int, marker string, matrix [][]rune) (int, int, string) {
 		}
 	} else if marker == "<" {
 		if j-1 < 0 {
-			return i, j-1, ""
+			return i, j - 1, marker
 		} else if matrix[i][j-1] == '#' {
 			return i - 1, j, "^"
 		} else {
@@ -88,7 +90,7 @@ func move(i int, j int, marker string, matrix [][]rune) (int, int, string) {
 		}
 	} else if marker == "v" {
 		if i+1 >= len(matrix) {
-			return i+1, j, ""
+			return i + 1, j, marker
 		} else if matrix[i+1][j] == '#' {
 			return i, j - 1, "<"
 		} else {
@@ -136,6 +138,9 @@ func Day06Part02() int {
 	count := 0
 	for i := range originalMatrix {
 		for j := range originalMatrix[i] {
+			if i == startI && j == startJ {
+				continue
+			}
 			// Copy matrix
 			matrix := make([][]rune, len(originalMatrix))
 			for i, line := range originalMatrix {
@@ -182,3 +187,6 @@ func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, widt
 
 	return false
 }
+
+// Tried:
+// 1893 too low
