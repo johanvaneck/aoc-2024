@@ -129,8 +129,8 @@ func Day06Part02() int {
 		originalMatrix = append(originalMatrix, []rune(line))
 	}
 
-	width := len(originalMatrix)
-	height := len(originalMatrix[0])
+	h := len(originalMatrix)
+	w := len(originalMatrix[0])
 	startI, startJ, startMarker := findMarker(originalMatrix)
 
 	count := 0
@@ -147,7 +147,7 @@ func Day06Part02() int {
 			}
 			// Insert new obstacle
 			matrix[i][j] = '#'
-			if checkLoop(startI, startJ, string(startMarker), matrix, width, height) {
+			if checkLoop(startI, startJ, string(startMarker), matrix, w, h) {
 				count++
 			}
 		}
@@ -156,19 +156,19 @@ func Day06Part02() int {
 	return count
 }
 
-func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, width int, height int) bool {
+func checkLoop(startI int, startJ int, startMarker string, matrix [][]rune, w int, h int) bool {
 	i, j := startI, startJ
 	marker := startMarker
-	visited := make([][]string, width)
+	visited := make([][]string, h)
 	for i := range visited {
-		visited[i] = make([]string, height)
+		visited[i] = make([]string, w)
 	}
 
 	for true {
 		if i < 0 ||
 			j < 0 ||
-			i >= width-1 ||
-			j >= height-1 ||
+			i >= h-1 ||
+			j >= w-1 ||
 			marker == "" {
 			break
 		}
